@@ -465,10 +465,6 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem v
         <div class="ticker-val"><span id="t-brent">—</span> <span class="ticker-unit">$/bbl</span> <span class="ticker-chg" id="t-brent-chg"></span></div>
       </div>
       <div class="hero-ticker hero-ticker--live">
-        <div class="ticker-label">Urals Oil · к BR1 <span class="live-dot" id="dot-urals"></span></div>
-        <div class="ticker-val"><span id="t-urals">—</span> <span class="ticker-unit">$/bbl</span> <span class="ticker-chg" id="t-urals-chg"></span></div>
-      </div>
-      <div class="hero-ticker hero-ticker--live">
         <div class="ticker-label">NG1 · газ <span class="live-dot" id="dot-ng"></span></div>
         <div class="ticker-val"><span id="t-ng">—</span> <span class="ticker-unit">$/MMBtu</span> <span class="ticker-chg" id="t-ng-chg"></span></div>
       </div>
@@ -1000,12 +996,10 @@ if(!isTouch&&cur&&ring){
   draw();
 })();
 
-// ===== LIVE COMMODITY QUOTES (Brent BR1, Urals, NG1) =====
+// ===== LIVE COMMODITY QUOTES (Brent BR1, NG1) =====
 (function(){
   const MOEX={brent:'BRM6',gas:'NGK6'};
   const YAHOO={brent:'BZ=F',gas:'NG=F'};
-  const URALS_BRENT_RATIO=0.948;
-  const state={brent:null,urals:null,gas:null};
 
   function setQuote(key,price,chgPct,decimals){
     const valEl=document.getElementById('t-'+key);
@@ -1068,21 +1062,10 @@ if(!isTouch&&cur&&ring){
       fetchPair(MOEX.brent,YAHOO.brent),
       fetchPair(MOEX.gas,YAHOO.gas)
     ]);
-    if(brent){
-      state.brent=brent.price;
-      setQuote('brent',brent.price,brent.chgPct,2);
-      const uralsPrice=brent.price*URALS_BRENT_RATIO;
-      const uralsChg=brent.chgPct;
-      state.urals=uralsPrice;
-      setQuote('urals',uralsPrice,uralsChg,2);
-    }else{
-      setQuote('brent',null,null,2);
-      setQuote('urals',null,null,2);
-    }
-    if(gas){
-      state.gas=gas.price;
-      setQuote('ng',gas.price,gas.chgPct,3);
-    }else setQuote('ng',null,null,3);
+    if(brent)setQuote('brent',brent.price,brent.chgPct,2);
+    else setQuote('brent',null,null,2);
+    if(gas)setQuote('ng',gas.price,gas.chgPct,3);
+    else setQuote('ng',null,null,3);
   }
 
   refreshQuotes();
