@@ -108,7 +108,7 @@ h1.hero-title .line3{color:var(--steel-light);display:block;font-size:.55em;}
 .ticker-chg.up{color:var(--green-light);}
 .ticker-chg.down{color:var(--rust-light);}
 .ticker-unit{font-size:.65rem;color:var(--text-muted);font-weight:400;}
-.hero-live-quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:2rem;}
+.hero-live-quotes{display:flex;flex-direction:column;gap:.5rem;}
 .hero-ticker--live{border-left:2px solid var(--gold);}
 .live-dot{display:inline-block;width:6px;height:6px;background:var(--green-light);border-radius:50%;margin-left:5px;vertical-align:middle;animation:livePulse 1.4s ease-in-out infinite;}
 .live-dot.off{background:var(--rust-light);animation:none;}
@@ -339,7 +339,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem v
   .hero-desc{font-size:.95rem;margin-bottom:1.75rem;}
   .hero-btns{flex-direction:column;}
   .hero-btns .btn-gold,.hero-btns .btn-ghost{width:100%;text-align:center;padding:.85rem 1.2rem;}
-  .hero-live-quotes{grid-template-columns:1fr;gap:.45rem;margin-top:1.5rem;}
+  .hero-side{margin-top:1.5rem;max-width:100%;}
   .hero-ticker--live{padding:.65rem 1rem;}
   .btn-gold,.btn-ghost{padding:.85rem 1.4rem;font-size:.75rem;}
   .s-title{font-size:clamp(2rem,8vw,3rem);}
@@ -445,20 +445,6 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem v
       <a href="#map-section" class="btn-gold">Изучить базу ВИНК</a>
       <a href="#services" class="btn-ghost">Наши услуги</a>
     </div>
-    <div class="hero-live-quotes" id="hero-live-quotes">
-      <div class="hero-ticker hero-ticker--live">
-        <div class="ticker-label">Brent · BR1 <span class="live-dot" id="dot-brent"></span></div>
-        <div class="ticker-val"><span id="t-brent">—</span> <span class="ticker-unit">$/bbl</span> <span class="ticker-chg" id="t-brent-chg"></span></div>
-      </div>
-      <div class="hero-ticker hero-ticker--live">
-        <div class="ticker-label">Urals Oil · к BR1 <span class="live-dot" id="dot-urals"></span></div>
-        <div class="ticker-val"><span id="t-urals">—</span> <span class="ticker-unit">$/bbl</span> <span class="ticker-chg" id="t-urals-chg"></span></div>
-      </div>
-      <div class="hero-ticker hero-ticker--live">
-        <div class="ticker-label">NG1 · газ <span class="live-dot" id="dot-ng"></span></div>
-        <div class="ticker-val"><span id="t-ng">—</span> <span class="ticker-unit">$/MMBtu</span> <span class="ticker-chg" id="t-ng-chg"></span></div>
-      </div>
-    </div>
   </div>
   <div class="hero-side">
     <div class="hero-ticker">
@@ -472,6 +458,20 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem v
     <div class="hero-ticker">
       <div class="ticker-label">ОХВАТ ТЕРРИТОРИИ РФ</div>
       <div class="ticker-val" style="color:var(--gold-light)">8 / 8 <span style="font-size:.7rem;color:#4a6080">округов</span></div>
+    </div>
+    <div class="hero-live-quotes" id="hero-live-quotes">
+      <div class="hero-ticker hero-ticker--live">
+        <div class="ticker-label">Brent · BR1 <span class="live-dot" id="dot-brent"></span></div>
+        <div class="ticker-val"><span id="t-brent">—</span> <span class="ticker-unit">$/bbl</span> <span class="ticker-chg" id="t-brent-chg"></span></div>
+      </div>
+      <div class="hero-ticker hero-ticker--live">
+        <div class="ticker-label">Urals Oil · к BR1 <span class="live-dot" id="dot-urals"></span></div>
+        <div class="ticker-val"><span id="t-urals">—</span> <span class="ticker-unit">$/bbl</span> <span class="ticker-chg" id="t-urals-chg"></span></div>
+      </div>
+      <div class="hero-ticker hero-ticker--live">
+        <div class="ticker-label">NG1 · газ <span class="live-dot" id="dot-ng"></span></div>
+        <div class="ticker-val"><span id="t-ng">—</span> <span class="ticker-unit">$/MMBtu</span> <span class="ticker-chg" id="t-ng-chg"></span></div>
+      </div>
     </div>
   </div>
 </section>
