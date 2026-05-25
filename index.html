@@ -54,8 +54,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 5%;height:64px;dis
 .nav-btn:hover{background:var(--gold-light);}
 
 /* BACK TO TOP */
-.back-top{position:fixed;left:1.5rem;bottom:2rem;z-index:400;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--border2);color:var(--gold-light);cursor:none;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .3s,visibility .3s,transform .3s,background .2s,border-color .2s,color .2s;}
-.back-top.visible{opacity:1;visibility:visible;transform:translateY(0);}
+.back-top{position:absolute;left:1.5rem;z-index:400;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--border2);color:var(--gold-light);cursor:none;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s,visibility .25s,background .2s,border-color .2s,color .2s;box-shadow:0 4px 20px rgba(0,0,0,.35);}
+.back-top.visible{opacity:1;visibility:visible;pointer-events:auto;}
 .back-top:hover{background:rgba(200,148,42,.12);border-color:var(--gold);color:#fff;}
 .back-top svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 
@@ -1009,10 +1009,15 @@ const footerEl=document.querySelector('footer');
 function updateScrollUI(){
   document.querySelector('nav').style.borderBottomColor=window.scrollY>40?'rgba(100,140,200,.2)':'rgba(100,140,200,.08)';
   if(!backTop)return;
-  const footerTop=footerEl?footerEl.getBoundingClientRect().top:Infinity;
-  const nearFooter=footerTop<window.innerHeight*0.85;
-  const scrolled=window.scrollY>window.innerHeight*0.35;
-  backTop.classList.toggle('visible',scrolled&&nearFooter);
+  const y=window.scrollY,vh=window.innerHeight,btnH=52;
+  const show=y>vh*0.2;
+  backTop.classList.toggle('visible',show);
+  if(!show)return;
+  let top=y+vh*0.55-btnH/2;
+  const footerTop=footerEl?footerEl.offsetTop:document.documentElement.scrollHeight;
+  top=Math.min(top,footerTop-btnH-20);
+  top=Math.max(top,y+72);
+  backTop.style.top=top+'px';
 }
 window.addEventListener('scroll',updateScrollUI,{passive:true});
 updateScrollUI();
