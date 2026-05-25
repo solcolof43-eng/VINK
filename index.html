@@ -101,9 +101,18 @@ h1.hero-title .line3{color:var(--steel-light);display:block;font-size:.55em;}
 .hero-side{position:absolute;right:4%;top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:.5rem;}
 .hero-ticker{background:var(--panel);border:1px solid var(--border2);padding:.7rem 1.2rem;min-width:240px;}
 .ticker-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);}
-.ticker-val{font-family:'IBM Plex Mono',monospace;font-size:1.1rem;color:#fff;margin-top:.2rem;}
+.ticker-val{font-family:'IBM Plex Mono',monospace;font-size:1.1rem;color:#fff;margin-top:.2rem;display:flex;align-items:baseline;flex-wrap:wrap;gap:.25rem .4rem;}
 .ticker-val .up{color:var(--green-light);}
 .ticker-val .down{color:var(--rust-light);}
+.ticker-chg{font-size:.68rem;letter-spacing:.5px;}
+.ticker-chg.up{color:var(--green-light);}
+.ticker-chg.down{color:var(--rust-light);}
+.ticker-unit{font-size:.65rem;color:var(--text-muted);font-weight:400;}
+.hero-live-quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:2rem;}
+.hero-ticker--live{border-left:2px solid var(--gold);}
+.live-dot{display:inline-block;width:6px;height:6px;background:var(--green-light);border-radius:50%;margin-left:5px;vertical-align:middle;animation:livePulse 1.4s ease-in-out infinite;}
+.live-dot.off{background:var(--rust-light);animation:none;}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(.85);}}
 /* SECTION SHARED */
 section{position:relative;z-index:2;}
 .s-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;}
@@ -300,6 +309,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem v
 @media(max-width:1024px){
   .map-inner,.rc-grid,.trust-inner{grid-template-columns:1fr;gap:2.5rem;}
   .hero-side{display:none;}
+  .hero-live-quotes{grid-template-columns:repeat(3,1fr);}
   .charts-grid{grid-template-columns:1fr;}
   .chart-card.wide{grid-column:span 1;}
   .method-grid{grid-template-columns:repeat(2,1fr);}
@@ -329,6 +339,8 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem v
   .hero-desc{font-size:.95rem;margin-bottom:1.75rem;}
   .hero-btns{flex-direction:column;}
   .hero-btns .btn-gold,.hero-btns .btn-ghost{width:100%;text-align:center;padding:.85rem 1.2rem;}
+  .hero-live-quotes{grid-template-columns:1fr;gap:.45rem;margin-top:1.5rem;}
+  .hero-ticker--live{padding:.65rem 1rem;}
   .btn-gold,.btn-ghost{padding:.85rem 1.4rem;font-size:.75rem;}
   .s-title{font-size:clamp(2rem,8vw,3rem);}
   .s-sub{font-size:.88rem;}
@@ -433,19 +445,29 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem v
       <a href="#map-section" class="btn-gold">Изучить базу ВИНК</a>
       <a href="#services" class="btn-ghost">Наши услуги</a>
     </div>
+    <div class="hero-live-quotes" id="hero-live-quotes">
+      <div class="hero-ticker hero-ticker--live">
+        <div class="ticker-label">Brent · BR1 <span class="live-dot" id="dot-brent"></span></div>
+        <div class="ticker-val"><span id="t-brent">—</span> <span class="ticker-unit">$/bbl</span> <span class="ticker-chg" id="t-brent-chg"></span></div>
+      </div>
+      <div class="hero-ticker hero-ticker--live">
+        <div class="ticker-label">Urals Oil · к BR1 <span class="live-dot" id="dot-urals"></span></div>
+        <div class="ticker-val"><span id="t-urals">—</span> <span class="ticker-unit">$/bbl</span> <span class="ticker-chg" id="t-urals-chg"></span></div>
+      </div>
+      <div class="hero-ticker hero-ticker--live">
+        <div class="ticker-label">NG1 · газ <span class="live-dot" id="dot-ng"></span></div>
+        <div class="ticker-val"><span id="t-ng">—</span> <span class="ticker-unit">$/MMBtu</span> <span class="ticker-chg" id="t-ng-chg"></span></div>
+      </div>
+    </div>
   </div>
   <div class="hero-side">
     <div class="hero-ticker">
       <div class="ticker-label">ДОБЫЧА НЕФТИ РФ (млн т/год)</div>
-      <div class="ticker-val"><span class="up" id="t-oil">523.4</span> <span style="font-size:.7rem;color:#4a6080">▲ 1.2%</span></div>
+      <div class="ticker-val"><span class="up" id="t-oil">523.4</span> <span class="ticker-chg up">▲ 1.2%</span></div>
     </div>
     <div class="hero-ticker">
       <div class="ticker-label">УРАЛЬСКИЙ ФО · КОМПАНИЙ</div>
       <div class="ticker-val">48 <span style="font-size:.7rem;color:var(--gold)">профилей</span></div>
-    </div>
-    <div class="hero-ticker">
-      <div class="ticker-label">BRENT ($/BBL)</div>
-      <div class="ticker-val"><span class="up" id="t-brent">74.8</span> <span style="font-size:.7rem;color:#4a6080">live</span></div>
     </div>
     <div class="hero-ticker">
       <div class="ticker-label">ОХВАТ ТЕРРИТОРИИ РФ</div>
@@ -978,13 +1000,94 @@ if(!isTouch&&cur&&ring){
   draw();
 })();
 
-// ===== TICKER FLICKER =====
-setInterval(()=>{
-  const oEl=document.getElementById('t-oil');
-  const bEl=document.getElementById('t-brent');
-  if(oEl)oEl.textContent=(523+Math.random()*.4-.2).toFixed(1);
-  if(bEl)bEl.textContent=(74.5+Math.random()*.8-.4).toFixed(1);
-},2800);
+// ===== LIVE COMMODITY QUOTES (Brent BR1, Urals, NG1) =====
+(function(){
+  const MOEX={brent:'BRM6',gas:'NGK6'};
+  const YAHOO={brent:'BZ=F',gas:'NG=F'};
+  const URALS_BRENT_RATIO=0.948;
+  const state={brent:null,urals:null,gas:null};
+
+  function setQuote(key,price,chgPct,decimals){
+    const valEl=document.getElementById('t-'+key);
+    const chgEl=document.getElementById('t-'+key+'-chg');
+    const dotEl=document.getElementById('dot-'+key);
+    if(!valEl)return;
+    if(price==null||isNaN(price)){
+      valEl.textContent='—';
+      valEl.className='';
+      if(chgEl)chgEl.textContent='нет данных';
+      if(dotEl)dotEl.classList.add('off');
+      return;
+    }
+    valEl.textContent=Number(price).toFixed(decimals);
+    valEl.className=chgPct==null?'':(chgPct>=0?'up':'down');
+    if(chgEl){
+      if(chgPct==null)chgEl.textContent='live';
+      else{
+        const sign=chgPct>=0?'▲':'▼';
+        chgEl.textContent=sign+' '+Math.abs(chgPct).toFixed(2)+'%';
+        chgEl.className='ticker-chg '+(chgPct>=0?'up':'down');
+      }
+    }
+    if(dotEl)dotEl.classList.remove('off');
+  }
+
+  async function fetchMoex(secid){
+    const url='https://iss.moex.com/iss/engines/futures/markets/forts/securities/'+secid+'.json?iss.only=marketdata&marketdata.columns=LAST,LASTTOPREVPRICE';
+    const r=await fetch(url);
+    if(!r.ok)throw new Error('MOEX');
+    const j=await r.json();
+    const row=j.marketdata?.data?.[0];
+    if(!row||row[0]==null)return null;
+    return{price:+row[0],chgPct:row[1]!=null?+row[1]:null};
+  }
+
+  async function fetchYahoo(symbol){
+    const url='https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(symbol)+'?interval=1m&range=1d';
+    const r=await fetch(url);
+    if(!r.ok)throw new Error('Yahoo');
+    const j=await r.json();
+    const m=j.chart?.result?.[0]?.meta;
+    if(!m?.regularMarketPrice)return null;
+    const price=m.regularMarketPrice;
+    const prev=m.chartPreviousClose??m.previousClose??price;
+    const chgPct=prev?((price-prev)/prev)*100:0;
+    return{price,chgPct};
+  }
+
+  async function fetchPair(moexId,yahooId){
+    try{return await fetchMoex(moexId);}
+    catch(e){
+      try{return await fetchYahoo(yahooId);}
+      catch(e2){return null;}
+    }
+  }
+
+  async function refreshQuotes(){
+    const [brent,gas]=await Promise.all([
+      fetchPair(MOEX.brent,YAHOO.brent),
+      fetchPair(MOEX.gas,YAHOO.gas)
+    ]);
+    if(brent){
+      state.brent=brent.price;
+      setQuote('brent',brent.price,brent.chgPct,2);
+      const uralsPrice=brent.price*URALS_BRENT_RATIO;
+      const uralsChg=brent.chgPct;
+      state.urals=uralsPrice;
+      setQuote('urals',uralsPrice,uralsChg,2);
+    }else{
+      setQuote('brent',null,null,2);
+      setQuote('urals',null,null,2);
+    }
+    if(gas){
+      state.gas=gas.price;
+      setQuote('ng',gas.price,gas.chgPct,3);
+    }else setQuote('ng',null,null,3);
+  }
+
+  refreshQuotes();
+  setInterval(refreshQuotes,45000);
+})();
 
 // ===== REVEAL =====
 const revObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');revObs.unobserve(e.target);}});},{threshold:.1});
