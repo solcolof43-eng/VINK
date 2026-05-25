@@ -44,13 +44,15 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 5%;height:64px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);background:rgba(7,8,13,.85);backdrop-filter:blur(16px);}
-.nav-logo{display:flex;align-items:center;}
-.nav-logo img{height:54px;width:auto;display:block;object-fit:contain;filter:brightness(0) invert(1);}
-.nav-links{display:flex;gap:2.5rem;list-style:none;}
-.nav-links a{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color .2s;}
-.nav-links a:hover{color:var(--gold-light);}
-.nav-btn{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--black);background:var(--gold);padding:.5rem 1.2rem;border:none;cursor:none;text-decoration:none;transition:background .2s;}
+.nav-logo{display:flex;align-items:center;flex-shrink:0;}
+.nav-logo img{height:54px;width:auto;display:block;object-fit:contain;filter:brightness(0) saturate(100%) invert(88%) sepia(28%) saturate(1400%) hue-rotate(358deg) brightness(1.05);animation:logoSway 5s ease-in-out infinite;transform-origin:center center;}
+.nav-right{display:flex;align-items:center;gap:2.5rem;margin-left:auto;}
+.nav-links{display:flex;gap:2.5rem;list-style:none;align-items:center;}
+.nav-links a{font-family:'IBM Plex Mono',monospace;font-size:.88rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-light);text-decoration:none;transition:color .2s,opacity .2s;}
+.nav-links a:hover{color:#fff;opacity:.9;}
+.nav-btn{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--black);background:var(--gold);padding:.5rem 1.2rem;border:none;cursor:none;text-decoration:none;transition:background .2s;flex-shrink:0;}
 .nav-btn:hover{background:var(--gold-light);}
+@keyframes logoSway{0%,100%{transform:rotate(-1.2deg) translateY(0);}50%{transform:rotate(1.2deg) translateY(-2px);}}
 
 /* HERO */
 #hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:80px 5% 0;overflow:hidden;background:var(--black);}
@@ -261,7 +263,7 @@ section{position:relative;z-index:2;}
 /* FOOTER */
 footer{background:var(--black);border-top:1px solid var(--border);padding:2rem 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
 .foot-logo{display:flex;align-items:center;}
-.foot-logo img{height:56px;width:auto;display:block;object-fit:contain;filter:brightness(0) invert(1);}
+.foot-logo img{height:56px;width:auto;display:block;object-fit:contain;filter:brightness(0) saturate(100%) invert(88%) sepia(28%) saturate(1400%) hue-rotate(358deg) brightness(1.05);animation:logoSway 5s ease-in-out infinite;transform-origin:center center;}
 .foot-mono{font-family:'IBM Plex Mono',monospace;font-size:1rem;color:var(--gold-light);letter-spacing:1.5px;}
 .foot-mono a{color:var(--gold-light);text-decoration:none;transition:color .2s;}
 .foot-mono a:hover{color:#fff;}
@@ -282,7 +284,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem 5
 }
 @media(max-width:800px){
   .services-grid,.method-grid{grid-template-columns:1fr;}
-  .nav-links{display:none;}
+  .nav-right .nav-links{display:none;}
   h1.hero-title{font-size:clamp(3rem,14vw,5rem);}
   .regions-tabs{flex-wrap:nowrap;}
 }
@@ -296,12 +298,14 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem 5
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo"><img src="logo.png" alt="Touch Oil — логотип компании"></a>
-  <ul class="nav-links">
-    <li><a href="#map-section">ВИНК</a></li>
-    <li><a href="#charts-section">Аналитика</a></li>
-    <li><a href="#services">Услуги</a></li>
-  </ul>
-  <a href="mailto:office@touchoil.pro" class="nav-btn">Запрос</a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#map-section">ВИНК</a></li>
+      <li><a href="#charts-section">Аналитика</a></li>
+      <li><a href="#services">Услуги</a></li>
+    </ul>
+    <a href="mailto:office@touchoil.pro" class="nav-btn">Запрос</a>
+  </div>
 </nav>
 
 <!-- HERO -->
