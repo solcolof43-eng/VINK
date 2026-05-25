@@ -1101,8 +1101,9 @@ if(!isTouch&&cur&&ring){
     let gas=readCache('NATURAL_GAS');
     if(brent)setQuote('brent',brent.price,brent.chgPct,2);
     if(gas)setQuote('ng',gas.price,gas.chgPct,3);
+    const needBrentApi=!readCache('BRENT');
     brent=await fetchWithFallback('BRENT',MOEX.brent,YAHOO.brent);
-    await new Promise(r=>setTimeout(r,15000));
+    if(needBrentApi)await new Promise(r=>setTimeout(r,15000));
     gas=await fetchWithFallback('NATURAL_GAS',MOEX.gas,YAHOO.gas);
     if(brent)setQuote('brent',brent.price,brent.chgPct,2);
     else setQuote('brent',null,null,2);
