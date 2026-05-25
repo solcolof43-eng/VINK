@@ -45,8 +45,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 5%;height:64px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);background:rgba(7,8,13,.85);backdrop-filter:blur(16px);}
 .nav-logo{display:flex;align-items:center;}
-.nav-logo img{height:40px;width:auto;display:block;object-fit:contain;}
-.nav-mono{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--text-muted);letter-spacing:1px;}
+.nav-logo img{height:54px;width:auto;display:block;object-fit:contain;filter:brightness(0) invert(1);}
 .nav-links{display:flex;gap:2.5rem;list-style:none;}
 .nav-links a{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color .2s;}
 .nav-links a:hover{color:var(--gold-light);}
@@ -262,8 +261,10 @@ section{position:relative;z-index:2;}
 /* FOOTER */
 footer{background:var(--black);border-top:1px solid var(--border);padding:2rem 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
 .foot-logo{display:flex;align-items:center;}
-.foot-logo img{height:36px;width:auto;display:block;object-fit:contain;filter:brightness(0) invert(1);opacity:.85;}
-.foot-mono{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:rgba(100,120,160,.4);letter-spacing:1px;}
+.foot-logo img{height:56px;width:auto;display:block;object-fit:contain;filter:brightness(0) invert(1);}
+.foot-mono{font-family:'IBM Plex Mono',monospace;font-size:1rem;color:var(--gold-light);letter-spacing:1.5px;}
+.foot-mono a{color:var(--gold-light);text-decoration:none;transition:color .2s;}
+.foot-mono a:hover{color:#fff;}
 
 /* REVEAL */
 .rev{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
@@ -295,7 +296,6 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem 5
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo"><img src="logo.png" alt="Touch Oil — логотип компании"></a>
-  <div class="nav-mono">ООО «ТАЧ ОЙЛ» · office@touchoil.pro</div>
   <ul class="nav-links">
     <li><a href="#map-section">ВИНК</a></li>
     <li><a href="#charts-section">Аналитика</a></li>
@@ -802,7 +802,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem 5
 <!-- FOOTER -->
 <footer>
   <div class="foot-logo"><img src="logo.png" alt="Touch Oil — логотип компании"></div>
-  <div class="foot-mono">ООО «ТАЧ ОЙЛ» · 2025 · WWW.TOUCHOIL.PRO</div>
+  <div class="foot-mono">ООО «ТАЧ ОЙЛ» · <a href="mailto:office@touchoil.pro">office@touchoil.pro</a></div>
 </footer>
 
 <script>
