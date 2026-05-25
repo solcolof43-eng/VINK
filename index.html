@@ -45,14 +45,19 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 5%;height:64px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);background:rgba(7,8,13,.85);backdrop-filter:blur(16px);}
 .nav-logo{display:flex;align-items:center;flex-shrink:0;}
-.nav-logo img{height:54px;width:auto;display:block;object-fit:contain;filter:brightness(0) saturate(100%) invert(88%) sepia(28%) saturate(1400%) hue-rotate(358deg) brightness(1.05);animation:logoSway 5s ease-in-out infinite;transform-origin:center center;}
+.nav-logo img{height:54px;width:auto;display:block;object-fit:contain;filter:brightness(0) saturate(100%) invert(88%) sepia(28%) saturate(1400%) hue-rotate(358deg) brightness(1.05);}
 .nav-right{display:flex;align-items:center;gap:2.5rem;margin-left:auto;}
 .nav-links{display:flex;gap:2.5rem;list-style:none;align-items:center;}
 .nav-links a{font-family:'IBM Plex Mono',monospace;font-size:.88rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-light);text-decoration:none;transition:color .2s,opacity .2s;}
 .nav-links a:hover{color:#fff;opacity:.9;}
 .nav-btn{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--black);background:var(--gold);padding:.5rem 1.2rem;border:none;cursor:none;text-decoration:none;transition:background .2s;flex-shrink:0;}
 .nav-btn:hover{background:var(--gold-light);}
-@keyframes logoSway{0%,100%{transform:rotate(-1.2deg) translateY(0);}50%{transform:rotate(1.2deg) translateY(-2px);}}
+
+/* BACK TO TOP */
+.back-top{position:fixed;left:1.5rem;bottom:2rem;z-index:400;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--border2);color:var(--gold-light);cursor:none;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .3s,visibility .3s,transform .3s,background .2s,border-color .2s,color .2s;}
+.back-top.visible{opacity:1;visibility:visible;transform:translateY(0);}
+.back-top:hover{background:rgba(200,148,42,.12);border-color:var(--gold);color:#fff;}
+.back-top svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 
 /* HERO */
 #hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:80px 5% 0;overflow:hidden;background:var(--black);}
@@ -78,12 +83,6 @@ h1.hero-title .line3{color:var(--steel-light);display:block;font-size:.55em;}
 .ticker-val{font-family:'IBM Plex Mono',monospace;font-size:1.1rem;color:#fff;margin-top:.2rem;}
 .ticker-val .up{color:var(--green-light);}
 .ticker-val .down{color:var(--rust-light);}
-.scroll-indicator{position:absolute;bottom:2.5rem;left:5%;z-index:3;display:flex;align-items:center;gap:.8rem;}
-.scroll-line{width:60px;height:1px;background:var(--border2);position:relative;overflow:hidden;}
-.scroll-line::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--gold);animation:slideLine 2s infinite;}
-@keyframes slideLine{to{left:100%;}}
-.scroll-text{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);}
-
 /* SECTION SHARED */
 section{position:relative;z-index:2;}
 .s-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;}
@@ -263,7 +262,7 @@ section{position:relative;z-index:2;}
 /* FOOTER */
 footer{background:var(--black);border-top:1px solid var(--border);padding:2rem 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
 .foot-logo{display:flex;align-items:center;}
-.foot-logo img{height:56px;width:auto;display:block;object-fit:contain;filter:brightness(0) saturate(100%) invert(88%) sepia(28%) saturate(1400%) hue-rotate(358deg) brightness(1.05);animation:logoSway 5s ease-in-out infinite;transform-origin:center center;}
+.foot-logo img{height:56px;width:auto;display:block;object-fit:contain;filter:brightness(0) saturate(100%) invert(88%) sepia(28%) saturate(1400%) hue-rotate(358deg) brightness(1.05);}
 .foot-mono{font-family:'IBM Plex Mono',monospace;font-size:1rem;color:var(--gold-light);letter-spacing:1.5px;}
 .foot-mono a{color:var(--gold-light);text-decoration:none;transition:color .2s;}
 .foot-mono a:hover{color:#fff;}
@@ -294,6 +293,10 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem 5
 
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
+
+<button type="button" id="back-top" class="back-top" aria-label="На главную" title="На главную">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
 <!-- NAV -->
 <nav>
@@ -345,10 +348,6 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:2rem 5
       <div class="ticker-label">ОХВАТ ТЕРРИТОРИИ РФ</div>
       <div class="ticker-val" style="color:var(--gold-light)">8 / 8 <span style="font-size:.7rem;color:#4a6080">округов</span></div>
     </div>
-  </div>
-  <div class="scroll-indicator">
-    <div class="scroll-line"></div>
-    <span class="scroll-text">Прокрутите вниз</span>
   </div>
 </section>
 
@@ -1004,9 +1003,22 @@ const tbObs=new IntersectionObserver(es=>{
 },{threshold:.3});
 const tb=document.getElementById('trust-bars');if(tb)tbObs.observe(tb);
 
-// ===== NAV SCROLL =====
-window.addEventListener('scroll',()=>{
+// ===== NAV SCROLL & BACK TO TOP =====
+const backTop=document.getElementById('back-top');
+const footerEl=document.querySelector('footer');
+function updateScrollUI(){
   document.querySelector('nav').style.borderBottomColor=window.scrollY>40?'rgba(100,140,200,.2)':'rgba(100,140,200,.08)';
+  if(!backTop)return;
+  const footerTop=footerEl?footerEl.getBoundingClientRect().top:Infinity;
+  const nearFooter=footerTop<window.innerHeight*0.85;
+  const scrolled=window.scrollY>window.innerHeight*0.35;
+  backTop.classList.toggle('visible',scrolled&&nearFooter);
+}
+window.addEventListener('scroll',updateScrollUI,{passive:true});
+updateScrollUI();
+backTop?.addEventListener('click',()=>{
+  window.scrollTo({top:0,behavior:'smooth'});
+  history.replaceState(null,'',location.pathname+location.search);
 });
 </script>
 </body>
