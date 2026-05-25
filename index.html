@@ -996,8 +996,11 @@ if(!isTouch&&cur&&ring){
   draw();
 })();
 
-// ===== LIVE COMMODITY QUOTES (Brent BR1, NG1) =====
+// ===== LIVE COMMODITY QUOTES — Alpha Vantage (Brent, NG1) =====
 (function(){
+  const AV_KEY='IEXW29MZ4UV3RFRJ';
+  const AV_URL='https://www.alphavantage.co/query';
+  const CACHE_MS=3*60*60*1000;
   const MOEX={brent:'BRM6',gas:'NGK6'};
   const YAHOO={brent:'BZ=F',gas:'NG=F'};
 
@@ -1026,6 +1029,39 @@ if(!isTouch&&cur&&ring){
     if(dotEl)dotEl.classList.remove('off');
   }
 
+  function readCache(fn){
+    try{
+      const raw=localStorage.getItem('av_'+fn);
+      if(!raw)return null;
+      const c=JSON.parse(raw);
+      if(Date.now()-c.t>CACHE_MS)return null;
+      return c.data;
+    }catch(e){return null;}
+  }
+
+  function writeCache(fn,data){
+    try{localStorage.setItem('av_'+fn,JSON.stringify({t:Date.now(),data}));}catch(e){}
+  }
+
+  async function fetchAlpha(fn){
+    const cached=readCache(fn);
+    if(cached)return cached;
+    const url=AV_URL+'?function='+fn+'&interval=daily&apikey='+AV_KEY;
+    const r=await fetch(url);
+    if(!r.ok)throw new Error('AV HTTP');
+    const j=await r.json();
+    if(j['Error Message']||j.Note||j.Information)throw new Error('AV limit');
+    const rows=j.data;
+    if(!rows?.length)throw new Error('AV empty');
+    const price=parseFloat(rows[0].value);
+    const prev=rows[1]?parseFloat(rows[1].value):price;
+    if(isNaN(price))throw new Error('AV parse');
+    const chgPct=prev?((price-prev)/prev)*100:0;
+    const data={price,chgPct};
+    writeCache(fn,data);
+    return data;
+  }
+
   async function fetchMoex(secid){
     const url='https://iss.moex.com/iss/engines/futures/markets/forts/securities/'+secid+'.json?iss.only=marketdata&marketdata.columns=LAST,LASTTOPREVPRICE';
     const r=await fetch(url);
@@ -1049,19 +1085,25 @@ if(!isTouch&&cur&&ring){
     return{price,chgPct};
   }
 
-  async function fetchPair(moexId,yahooId){
-    try{return await fetchMoex(moexId);}
+  async function fetchWithFallback(alphaFn,moexId,yahooId){
+    try{return await fetchAlpha(alphaFn);}
     catch(e){
-      try{return await fetchYahoo(yahooId);}
-      catch(e2){return null;}
+      try{return await fetchMoex(moexId);}
+      catch(e2){
+        try{return await fetchYahoo(yahooId);}
+        catch(e3){return readCache(alphaFn);}
+      }
     }
   }
 
   async function refreshQuotes(){
-    const [brent,gas]=await Promise.all([
-      fetchPair(MOEX.brent,YAHOO.brent),
-      fetchPair(MOEX.gas,YAHOO.gas)
-    ]);
+    let brent=readCache('BRENT');
+    let gas=readCache('NATURAL_GAS');
+    if(brent)setQuote('brent',brent.price,brent.chgPct,2);
+    if(gas)setQuote('ng',gas.price,gas.chgPct,3);
+    brent=await fetchWithFallback('BRENT',MOEX.brent,YAHOO.brent);
+    await new Promise(r=>setTimeout(r,15000));
+    gas=await fetchWithFallback('NATURAL_GAS',MOEX.gas,YAHOO.gas);
     if(brent)setQuote('brent',brent.price,brent.chgPct,2);
     else setQuote('brent',null,null,2);
     if(gas)setQuote('ng',gas.price,gas.chgPct,3);
@@ -1069,7 +1111,7 @@ if(!isTouch&&cur&&ring){
   }
 
   refreshQuotes();
-  setInterval(refreshQuotes,45000);
+  setInterval(refreshQuotes,CACHE_MS);
 })();
 
 // ===== REVEAL =====
